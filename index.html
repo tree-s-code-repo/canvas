@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Title Test</title>
+  </head>
+  <body>
+    <div>
+      <canvas id="canvas" style="border: 1px solid black"></canvas>
+    </div>
+    <script>
+      class CanvasDrwaing {
+        constructor(canvas) {
+          this.canvas = canvas;
+          this.ctx = canvas.getContext("2d");
+          this.rect = canvas.getBoundingClientRect();
+          this.drawable = false;
+          this.x = -1;
+          this.y = -1;
+
+          this.canvas.width = 700;
+          this.canvas.height = 700;
+
+          this.canvas.addEventListener(
+            "mousemove",
+            this.onMouseMove.bind(this)
+          );
+          this.canvas.addEventListener(
+            "mousedown",
+            this.startPainting.bind(this)
+          );
+          this.canvas.addEventListener("mouseup", this.stopPainting.bind(this));
+          this.canvas.addEventListener(
+            "mouseleave",
+            this.stopPainting.bind(this)
+          );
+        }
+
+        onMouseMove(e) {
+          if (!this.drawable) return;
+
+          const x = e.clientX - this.rect.left;
+          const y = e.clientY - this.rect.top;
+
+          this.drwaLine(this.x, this.y, x, y);
+          this.x = x;
+          this.y = y;
+        }
+
+        startPainting(e) {
+          this.drawable = true;
+          this.x = e.clientX - this.rect.left;
+          this.y = e.clientY - this.rect.top;
+        }
+
+        stopPainting() {
+          this.drawable = false;
+        }
+
+        drwaLine(x1, y1, x2, y2) {
+          this.ctx.beginPath();
+          this.ctx.moveTo(x1, y1);
+          this.ctx.lineTo(x2, y2);
+          this.ctx.stroke();
+          this.ctx.closePath();
+        }
+      }
+
+      const canvas = document.getElementById("canvas");
+
+      if (canvas) {
+        const drawing = new CanvasDrwaing(canvas);
+      }
+    </script>
+  </body>
+</html>
