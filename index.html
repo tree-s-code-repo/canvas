@@ -24,6 +24,7 @@
 
           this.start();
         }
+
         start() {
           this.canvas.addEventListener(
             "mousemove",
@@ -46,7 +47,7 @@
           const x = e.clientX - this.rect.left;
           const y = e.clientY - this.rect.top;
 
-          this.drwaLine(this.x, this.y, x, y);
+          this.drawLine(this.x, this.y, x, y);
           this.x = x;
           this.y = y;
         }
@@ -61,7 +62,7 @@
           this.drawable = false;
         }
 
-        drwaLine(x1, y1, x2, y2) {
+        drawLine(x1, y1, x2, y2) {
           this.ctx.beginPath();
           this.ctx.moveTo(x1, y1);
           this.ctx.lineTo(x2, y2);
