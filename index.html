@@ -64,6 +64,7 @@
         }
 
         undoCanvas() {
+          if (prevData.length === 0) return;
           this.ctx.putImageData(this.prevData.pop(), 0, 0);
         }
 
