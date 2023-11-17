@@ -76,11 +76,11 @@
 
           if (this.isEraser) {
             this.erase(x, y);
-          } else {
-            this.drawLine(this.x, this.y, x, y);
-            this.x = x;
-            this.y = y;
+            return;
           }
+          this.drawLine(this.x, this.y, x, y);
+          this.x = x;
+          this.y = y;
         }
 
         startPainting(e) {
@@ -118,6 +118,7 @@
 
         clearCanvas() {
           this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+          this.prevData = [];
         }
       }
 
