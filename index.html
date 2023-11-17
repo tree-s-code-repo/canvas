@@ -8,16 +8,21 @@
   <body>
     <div>
       <canvas id="canvas" style="border: 1px solid black"></canvas>
+      <button id="penButton">Pen</button>
+      <button id="eraserButton">Eraser</button>
+      <button id="clearButton">Clear</button>
     </div>
     <script>
-      class CanvasDrwaing {
-        constructor(canvas) {
-          this.canvas = canvas;
-          this.ctx = canvas.getContext("2d");
-          this.rect = canvas.getBoundingClientRect();
+      class CanvasDrawing {
+        constructor(canvasId) {
+          this.canvas = document.getElementById(canvasId);
+          this.ctx = this.canvas.getContext("2d");
+          this.rect = this.canvas.getBoundingClientRect();
           this.drawable = false;
           this.x = -1;
           this.y = -1;
+          this.isEraser = false;
+          this.eraserSize = 30;
 
           this.canvas.width = 700;
           this.canvas.height = 700;
@@ -39,6 +44,21 @@
             "mouseleave",
             this.stopPainting.bind(this)
           );
+
+          this.setButtonClickListener("penButton", this.selectPen.bind(this));
+          this.setButtonClickListener(
+            "eraserButton",
+            this.selectEraser.bind(this)
+          );
+          this.setButtonClickListener(
+            "clearButton",
+            this.clearCanvas.bind(this)
+          );
+        }
+
+        setButtonClickListener(buttonId, handler) {
+          const button = document.getElementById(buttonId);
+          button.addEventListener("click", handler);
         }
 
         onMouseMove(e) {
@@ -47,9 +67,13 @@
           const x = e.clientX - this.rect.left;
           const y = e.clientY - this.rect.top;
 
-          this.drawLine(this.x, this.y, x, y);
-          this.x = x;
-          this.y = y;
+          if (this.isEraser) {
+            this.erase(x, y);
+          } else {
+            this.drawLine(this.x, this.y, x, y);
+            this.x = x;
+            this.y = y;
+          }
         }
 
         startPainting(e) {
@@ -69,13 +93,25 @@
           this.ctx.stroke();
           this.ctx.closePath();
         }
+
+        erase(x, y) {
+          this.ctx.clearRect(x - 5, y - 5, 10, 10);
+        }
+
+        selectPen() {
+          this.isEraser = false;
+        }
+
+        selectEraser() {
+          this.isEraser = true;
+        }
+
+        clearCanvas() {
+          this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        }
       }
 
-      const canvas = document.getElementById("canvas");
-
-      if (canvas) {
-        const drawing = new CanvasDrwaing(canvas);
-      }
+      const drawing = new CanvasDrawing("canvas");
     </script>
   </body>
 </html>
