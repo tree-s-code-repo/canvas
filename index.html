@@ -10,6 +10,7 @@
       <canvas id="canvas" style="border: 1px solid black"></canvas>
       <button id="penButton">Pen</button>
       <button id="eraserButton">Eraser</button>
+      <button id="undoButton">Undo</button>
       <button id="clearButton">Clear</button>
     </div>
     <script>
@@ -23,7 +24,7 @@
           this.y = -1;
           this.isEraser = false;
           this.eraserSize = 30;
-
+          this.prevData = [];
           this.canvas.width = 700;
           this.canvas.height = 700;
 
@@ -54,11 +55,16 @@
             "clearButton",
             this.clearCanvas.bind(this)
           );
+          this.setButtonClickListener("undoButton", this.undoCanvas.bind(this));
         }
 
         setButtonClickListener(buttonId, handler) {
           const button = document.getElementById(buttonId);
           button.addEventListener("click", handler);
+        }
+
+        undoCanvas() {
+          this.ctx.putImageData(this.prevData.pop(), 0, 0);
         }
 
         onMouseMove(e) {
@@ -77,6 +83,9 @@
         }
 
         startPainting(e) {
+          this.prevData.push(
+            this.ctx.getImageData(0, 0, this.canvas.width, this.canvas.height)
+          );
           this.drawable = true;
           this.x = e.clientX - this.rect.left;
           this.y = e.clientY - this.rect.top;
@@ -95,7 +104,7 @@
         }
 
         erase(x, y) {
-          this.ctx.clearRect(x - 5, y - 5, 10, 10);
+          this.ctx.clearRect(x - 5, y - 5, 30, 30);
         }
 
         selectPen() {
