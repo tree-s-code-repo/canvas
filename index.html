@@ -20,8 +20,10 @@
           this.ctx = this.canvas.getContext("2d");
           this.rect = this.canvas.getBoundingClientRect();
           this.drawable = false;
+
           this.x = -1;
           this.y = -1;
+
           this.isEraser = false;
           this.eraserSize = 30;
           this.prevData = [];
@@ -29,6 +31,7 @@
           this.canvas.height = 700;
 
           this.start();
+          this.setButton();
         }
 
         start() {
@@ -45,7 +48,9 @@
             "mouseleave",
             this.stopPainting.bind(this)
           );
+        }
 
+        setButton() {
           this.setButtonClickListener("penButton", this.selectPen.bind(this));
           this.setButtonClickListener(
             "eraserButton",
@@ -64,7 +69,7 @@
         }
 
         undoCanvas() {
-          if (prevData.length === 0) return;
+          if (this.prevData.length === 0) return;
           this.ctx.putImageData(this.prevData.pop(), 0, 0);
         }
 
@@ -78,6 +83,7 @@
             this.erase(x, y);
             return;
           }
+
           this.drawLine(this.x, this.y, x, y);
           this.x = x;
           this.y = y;
@@ -105,7 +111,7 @@
         }
 
         erase(x, y) {
-          this.ctx.clearRect(x - 5, y - 5, 30, 30);
+          this.ctx.clearRect(x - 5, y - 5, this.eraserSize, this.eraserSize);
         }
 
         selectPen() {
