@@ -76,8 +76,8 @@
         onMouseMove(e) {
           if (!this.drawable) return;
 
-          const x = e.clientX - this.rect.left;
-          const y = e.clientY - this.rect.top;
+          const x = e.offsetX;
+          const y = e.offsetY;
 
           if (this.isEraser) {
             this.erase(x, y);
@@ -94,8 +94,9 @@
             this.ctx.getImageData(0, 0, this.canvas.width, this.canvas.height)
           );
           this.drawable = true;
-          this.x = e.clientX - this.rect.left;
-          this.y = e.clientY - this.rect.top;
+
+          this.x = e.offsetX;
+          this.y = e.offsetY;
         }
 
         stopPainting() {
